@@ -11,10 +11,14 @@ import {
   Container,
   Box,
 } from "@mui/material";
+import SinglePlayer from "./SinglePlayer";
 
 const AllPlayers = () => {
   const [players, setPlayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [removed, setRemoved] = useState(false);
 
   // Fetch players from the API when the component loads
   useEffect(() => {
@@ -28,6 +32,21 @@ const AllPlayers = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleOpenModal = (player) => {
+    setSelectedPlayer(player);
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    setSelectedPlayer(null);
+  };
+
+  const removePlayer = (player) => {
+    setSelectedPlayer(player);
+    setRemoved(true);
   };
 
   // Filter players based on search term
@@ -45,19 +64,16 @@ const AllPlayers = () => {
         <TextField label="Player Name" variant="outlined" sx={{ mr: 2 }} />
         <TextField label="Player Breed" variant="outlined" sx={{ mr: 2 }} />
         <TextField label="Player Image URL" variant="outlined" sx={{ mr: 2 }} />
-        <Button variant="contained">Submit</Button>
+        <Button variant="contained" color="info">Submit</Button>
       </Box>
-
-      {/* Search Bar */}
-      <Box mb={4}>
-        <TextField
-          label="Search Players"
-          variant="outlined"
-          fullWidth
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </Box>
+      <TextField
+        label="Search Players"
+        variant="outlined"
+        fullWidth
+        value={searchTerm}
+        onChange={handleSearchChange}
+        sx={{ mb: 4 }}
+      />
 
       {/* Players Grid */}
       <Grid container spacing={3}>
@@ -74,15 +90,34 @@ const AllPlayers = () => {
                 <Typography variant="subtitle1">{player.breed}</Typography>
               </CardContent>
               <CardActions>
-                <Button variant="contained" color="secondary">
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => removePlayer(player)}
+                >
                   Remove Player
                 </Button>
-                <Button variant="outlined">View Player Details</Button>
+                <Button
+                  variant="contained"
+                  color="info"
+                  onClick={() => handleOpenModal(player)}
+                >
+                  View Player Details
+                </Button>
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
+
+      {/* Single Player Modal */}
+      {selectedPlayer && (
+        <SinglePlayer
+          open={open}
+          handleClose={handleCloseModal}
+          player={selectedPlayer}
+        />
+      )}
     </Container>
   );
 };
