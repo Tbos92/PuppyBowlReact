@@ -25,6 +25,12 @@ const SinglePlayer = ({ open, handleClose, player }) => {
           <Typography variant="h6" sx={{ mt: 2 }}>
             Breed: {player.breed}
           </Typography>
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Status: {player.status}
+          </Typography>
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Team ID: {player.teamId || "Free Agent"}
+          </Typography>
         </Box>
       </DialogContent>
       <DialogActions>
